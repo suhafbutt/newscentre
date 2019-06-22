@@ -17,8 +17,13 @@
 
   <!-- script tags
   ============================================================= -->
+  <script src="js/all.min.js"></script>
   <script src="js/jquery-2.1.1.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <script src="js/Lobibox.min.js"></script>
+  <script src="js/jquery.preloader.min.js"></script>
+  <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="js/jquery.dialog.min.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

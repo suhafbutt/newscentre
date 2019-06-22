@@ -1,5 +1,5 @@
-<?php include('header.php') ?>  
-  <section class="slider" id="home">
+<?php include('header.php') ?>
+  <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg">
     <div class="container-fluid">
       <div class="row">
           <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
@@ -34,49 +34,51 @@
     </div>  
   </section>
   <!-- about section -->
-  <section class="about text-center" id="about">
+  <section class="about text-center newsHubProviderArea" id="about">
     <div class="container">
-      <div class="row">
-        <p></p>     <div class="col-md-4 col-sm-6">
-          <div class="single-about-detail clearfix">
-            <div class="about-img">
-              <img class="img-responsive" src="img/item1.jpg" alt="">
-            </div>
-            <div class="about-details">
-              <div class="pentagon-text">
-                <h1>C</h1>
-              </div>
-              <h3>Children’s specialist</h3>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6">
+      <div class="row" id='prividersList'>
+        <div class="col-md-6 col-sm-6 hidden prividersListArea" id='hiddenArea'>
           <div class="single-about-detail">
-            <div class="about-img">
-              <img class="img-responsive" src="img/item2.jpg" alt="">
-            </div>
             <div class="about-details">
               <div class="pentagon-text">
-                <h1>W</h1>
+                <h1 class='turncate_to provider_name'>
+                  FOX News
+                </h1>
+                <div class='webFeedActions pull-right'>
+                  <a href="JavaScript:void(0);" class='external_provider_link' target="_blank">
+                    <i class="fas fa-external-link-square-alt"></i>
+                  </a>
+                  <a href="JavaScript:void(0);" class='sync_provider_data'>
+                    <i class="fas fa-sync"></i>
+                  </a>
+                  <a href="JavaScript:void(0);" class='edit_provider_data'>
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="JavaScript:void(0);" class='delete_provider_data'>
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </div>
               </div>
-
-              <h3>Children’s specialist</h3>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6">
-          <div class="single-about-detail">
-            <div class="about-img">
-              <img class="img-responsive" src="img/item3.jpg" alt="">
-            </div>
-            <div class="about-details">
-              <div class="pentagon-text">
-                <h1>M</h1>
-              </div>
-              <h3>Children’s specialist</h3>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.</p>
+              <ul class= 'providerWebFeedArea'>
+                <li>
+                  <p class='turncate_to title'>
+                    mom left paralyzed after pregnancy complication triggers stroke at 29 weeks
+                  </p>
+                  <div class='newsActions pull-right'>
+                    <a href="JavaScript:void(0);" class='external_provider_feed_link' target="_blank">
+                      <i class="fas fa-external-link-square-alt"></i>
+                    </a>
+                    <a href="JavaScript:void(0);" class='edit_provider_feed_data'>
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="JavaScript:void(0);" class='delete_provider_feed_data'>
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+              <!-- <h3>Children’s specialist</h3>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.</p> -->
             </div>
           </div>
         </div>
@@ -267,14 +269,15 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="Name">Name</label>
-            <input type="text" class="form-control" name='name' id="Name" aria-describedby="emailHelp" placeholder="Enter email">
+            <input type="text" class="form-control" name='name' id="name">
           </div>
           <div class="form-group">
             <label for="feedUrl">Url</label>
             <input type="url" name='url' class="form-control" id="feedUrl">
-            <input type="text" name='api_key' class="form-control hidden" id="feedUrl" value="KMPydWQBnSXVZZXZK0jg">
-            <input type="text" name='method' class="form-control hidden" id="feedUrl" value="newFeed">
-            <input type="text" name='submitButton' class="form-control hidden" id="feedUrl" value="newWebFeedForm">
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="newFeed">
+            <input type="text" name='submitButton' class="form-control hidden" id="submitButton" value="newWebFeedForm">
+            <input type="text" name='id' class="form-control hidden" id="provider_id" value="">
           </div>
         </div>
         <div class="modal-footer">
