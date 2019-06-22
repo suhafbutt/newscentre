@@ -926,6 +926,9 @@ responsive area
 .action_area {
   padding: 15px;
 }
+.action_area .conf {
+  margin-right: 5px;
+}
 
 button.primary:hover {
   color: #3C9DC8;
@@ -1030,7 +1033,9 @@ button.close:before, button.close:after {
   float: right !important;
   margin: 20px 10px !important;
 }
-
+small {
+  font-size: 95%;
+}
 /*Custom Button CSS*/
 html,body{
   height:100%;

@@ -29,6 +29,9 @@
           <button type="button" class="pull-right primary" data-toggle="modal" data-target="#exampleModalCenter">
             New Web Feed
           </button>
+          <button type="button" class="pull-right primary conf" data-toggle="modal" data-target="#configurationModal">
+            Update Configuration
+          </button>
         </div>
       </div>
     </div>  
@@ -283,6 +286,41 @@
         <div class="modal-footer">
           <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
           <button type="button" class="small-btn primary" id='new_web_feed_submit'>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="configurationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id='configurationForm'>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            Change Configurations
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="time_interval">Time Interval to update Web Feed (minutes)</label>
+            <input type="number" class="form-control" name='time_interval' id="time_interval">
+          </div>
+          <div class="form-group">
+            <label for="keep_until">Old Record Age (days)</label>
+            <input type="number" name='keep_until' class="form-control" id="keep_until">
+            <small id="keep_until_help" class="form-text text-muted">Web Feeds records will not be saved if post is older than the threshold.</small>
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="updateConfiguration">
+            <input type="text" name='submitButton' class="form-control hidden" id="submitButton" value="updateConfiguration">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="small-btn primary" id='configurationFormSubmit'>Save</button>
         </div>
       </form>
     </div>

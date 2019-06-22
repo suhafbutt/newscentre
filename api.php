@@ -156,7 +156,7 @@
   }
 
   function import_webfeed($conn, $url, $provider_id) {
-    
+    $age = (int)get_feed_age_limit($conn);
     if(can_import_provider_feeds($conn)) { 
       $i=0;
       $feeds = simplexml_load_file($url);
@@ -165,16 +165,20 @@
         $fail = 0;
 
         foreach ($feeds->channel->item as $item) {
-          $q = create_query_for_feed( $provider_id, $item);
-          
-          if (mysqli_query($conn, $q)) {
-            // echo "New record created successfully";
-            $success++;
-          } 
-          else {
-            // echo "Error: " . $sql . "<br>" . $conn->error;
-            $fail++;
-          }  
+          $date2 = new DateTime(date('Y-m-d', strtotime($item->pubDate)));
+          $date1 = new DateTime(date('Y-m-d'));
+          $diff = $date1->diff($date2)->days;
+          if($age > $diff && !is_already_imported($conn, $item)) {
+            $q = create_query_for_feed( $provider_id, $item);
+            if (mysqli_query($conn, $q)) {
+              // echo "New record created successfully";
+              $success++;
+            } 
+            else {
+              // echo "Error: " . $sql . "<br>" . $conn->error;
+              $fail++;
+            }  
+          }
         }
       }
       else {
@@ -216,7 +220,6 @@
             $r[] = $rows;
         }
         $r['data'] = $r;
-        $r['data_count'] = mysqli_num_rows($result);
       }
       else {
         $r['data'] = [];
@@ -271,7 +274,8 @@
   }
 
   function update_web_feed_update_time_interval($conn) {
-    $sql = "UPDATE configurations SET configurations.keep_until = 10, configurations.last_updated = '".date("Y-m-d H:i:s")."' WHERE configurations.id=1";
+    $sql = "UPDATE configurations SET 
+    configurations.last_updated = '".date("Y-m-d H:i:s")."' WHERE configurations.id=1";
     mysqli_query($conn, $sql);
   }
 
@@ -284,5 +288,47 @@
       $r['error_message'] = 'You will be able to update the feed after '.round(($conf['update_gap']-$diff_last_updated));
       send_response($r);
     }
+  }
+
+  function getConfiguration($conn) {
+    $sql = "SELECT * FROM configurations WHERE configurations.id=1";
+    $result = mysqli_query($conn, $sql);
+    $r['data'] = mysqli_fetch_assoc($result);
+    send_response($r);
+  }
+
+  function updateConfiguration($conn) {
+    if(isset($_REQUEST['time_interval']) && $_REQUEST['time_interval'] != '') {
+      if(isset($_REQUEST['keep_until']) && $_REQUEST['keep_until'] != '') {
+        $sql = "UPDATE configurations SET configurations.keep_until = ".$_REQUEST['keep_until'].", configurations.update_gap = ".$_REQUEST['time_interval']." WHERE configurations.id=1";
+        if(mysqli_query($conn, $sql)) {
+          $r['success_message'] = "Configuration(s) updated successfully!";
+        }
+        else {
+          $r['error_message'] = $conn->error;
+        }
+      }
+      else {
+        $r['error_message'] = 'Old Record Age can not be empty!';
+      }
+    }
+    else {
+      $r['error_message'] = 'Time Interval can not be empty!';
+    }
+    send_response($r);
+  }
+
+  function get_feed_age_limit($conn) {
+    $sql = "SELECT * FROM configurations WHERE configurations.id=1";
+    $result = mysqli_query($conn, $sql);
+    return mysqli_fetch_assoc($result)['keep_until'];
+  }
+
+  function is_already_imported($conn, $item) {
+    $sql = "SELECT * FROM webfeeds WHERE webfeeds.url='".$item->link."'";
+    $result = mysqli_query($conn, $sql);
+    if(mysqli_num_rows($result) > 0)
+      return true;
+    return false;
   }
 ?>

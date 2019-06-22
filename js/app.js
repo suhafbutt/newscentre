@@ -25,9 +25,17 @@ function render_new_provider(data) {
   
   if(data.success_message){
     notify( 'success', data.success_message);
-    new_provider_div(data.record_id, data.record_name, data.record_url);
+    is_already_exist = $('.provider_'+data.record_id)[0]
     // get_provider_feeds(data.record_id);
-    import_webfeed(data.record_id);
+    if(is_already_exist) {
+      new_provider_div(data.record_id, data.record_name, data.record_url);
+      $('.provider_'+data.record_id+' ul').preloader('remove');
+    }
+    else {
+      new_provider_div(data.record_id, data.record_name, data.record_url);
+      import_webfeed(data.record_id);
+    }
+    
     resetWebFeedForm(); 
     $('.modal').modal('hide');
   }
@@ -42,23 +50,29 @@ function get_providers(){
 function render_providers(data){
   console.log(data);
   simplified_data = JSON.parse(data.responseText).data;
-  $.each(simplified_data, function (index, provider) {
-    new_provider_div(provider.id, provider.name, provider.url);
-  });
+  if(simplified_data.length > 0) {
+    $.each(simplified_data, function (index, provider) {
+      new_provider_div(provider.id, provider.name, provider.url);
+    });
+  }
+  else {
+    $('#prividersList').append("<h3 class='no_web_feeds'>No Web Feeds found!</h3>");
+  }
 
   $.each(simplified_data, function (index, provider) {
     get_provider_feeds(provider.id);
   });
-
 }
 
 function new_provider_div(provider_id, provider_name, provider_url) {
+  $('.no_web_feeds').remove();
   if($('.provider_'+provider_id)[0])
     newDiv = $('.provider_'+provider_id)
-  else
+  else {
     newDiv = $('.newsHubProviderArea #hiddenArea').clone().appendTo( '.newsHubProviderArea #prividersList' );
+    $(newDiv).find('.providerWebFeedArea li').html('');
+  }
 
-  $(newDiv).find('.providerWebFeedArea li').html('');
   $(newDiv).addClass('provider_'+provider_id);
   $(newDiv).data('record_id', provider_id);
   $(newDiv).removeAttr('id');  
@@ -84,6 +98,7 @@ function render_provider_feeds(data) {
   console.log(adata);
   if(adata.error_message) {
     notify( 'error', adata.error_message);
+    $('.prividersListArea ul').preloader('remove');
   }
   else{
     last_updated_provider_id = 0;
@@ -96,9 +111,13 @@ function render_provider_feeds(data) {
       $(newDiv).find('.newsActions .edit_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=edit_provider_feed");  
       $(newDiv).find('.newsActions .delete_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=delete_provider_feed");  
     });
-    $('.provider_'+last_updated_provider_id).find('ul').preloader('remove');
-    $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar("destroy");
-    $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar();
+    console.log('Id is : '+last_updated_provider_id);
+    if(last_updated_provider_id == 0)
+      $('.prividersListArea ul').preloader('remove');
+    else
+      $('.provider_'+last_updated_provider_id+' ul').preloader('remove');
+      $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar("destroy");
+      $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar();
   }
 }
 
@@ -148,8 +167,33 @@ function resetWebFeedForm() {
   // $('#exampleModalCenter form #submitButton').val('newWebFeedForm');
   // $('#exampleModalCenter form #method').val('newFeed');
 }
+
+function getConfiguration() {
+  request_to_server('GET', 'api.php', {'method': 'getConfiguration', 'api_key': $('#home').data('api_key')}, 'setConfiguration');
+}
+
+function setConfiguration(data) {
+  console.log(data);
+  data = JSON.parse(data.responseText).data;
+  $('form#configurationForm  #keep_until').val(data.keep_until);
+  $('form#configurationForm #time_interval').val(data.update_gap);
+}
+
+function updateConfiguration(data) {
+  console.log(data);
+  data = JSON.parse(data.responseText);
+  console.log(data);
+  if(data.success_message){
+    notify( 'success', data.success_message);
+    $('.modal').modal('hide');
+  }
+  if(data.error_message)
+    notify( 'error', data.error_message);
+}
+
 jQuery(document).ready(function () {
   get_providers();
+  getConfiguration();
   $('body').on('click', '#new_web_feed_submit', function(){
     console.log('Submit clicked');
 
@@ -198,5 +242,11 @@ jQuery(document).ready(function () {
 
   $('body').on('click', '.sync_provider_data', function(){
     import_webfeed($(this).closest('.prividersListArea').data('record_id'));
+  });
+
+  $('body').on('click', '#configurationFormSubmit', function(){
+    console.log('Configuration Update');
+    // import_webfeed($(this).closest('.prividersListArea').data('record_id'));
+    request_to_server('POST', 'api.php', $('#configurationForm').serialize(), 'updateConfiguration');
   });
 });
