@@ -15,11 +15,24 @@
   <link rel="stylesheet" href="css/style.css">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,800,700,300' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=BenchNine:300,400,700' rel='stylesheet' type='text/css'>
-  <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
-    <![endif]-->
 
 </head>
 <body>
+  <div style="background-image: url(img/back.jpg);">
+    <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id=<?php echo $_REQUEST['provider_id'] ?>>
+      <div class="container-fluid">
+        <div class="row">
+            <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
+            
+                <div class="carousel-inner" role="listbox" style="background-image: url(img/header.jpg);">
+                    <div class="item active" id="img_item">
+                      <img src="img/output-onlinepngtools.png" alt="News" class="img_news">
+                        <div class="carousel-caption">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
   

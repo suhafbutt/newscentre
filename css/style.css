@@ -1003,7 +1003,7 @@ button.close:before, button.close:after {
   width: 86%;
 }
 .about-details h1.turncate_to {
-  width: 67%;
+  width: 61%;
 }
 .prividersListArea {
   margin-bottom: 50px;
@@ -1066,6 +1066,16 @@ small {
 }
 #providerDetailView .header_section .heading{
   width: 76%;
+}
+#providerDetailView .header_section .section1 {
+  border-right: 2px solid #ddd;
+}
+body {
+  background-image: url("img/back.jpg");
+  background-repeat: repeat-y;
+}
+.containerWrapper {
+  background: rgba(0, 0, 0, 0.51) !important;
 }
 
 /*Custom Button CSS*/

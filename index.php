@@ -1,27 +1,4 @@
 <?php include('header.php') ?>
-  <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg">
-    <div class="container-fluid">
-      <div class="row">
-          <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
-          
-              <div class="carousel-inner" role="listbox" style="background-image: url(img/pattern.jpg);">
-                  <div class="item active" id="img_item">
-                    <img src="img/output-onlinepngtools.png" alt="News" class="img_news">
-                      <div class="carousel-caption">
-                        <!-- <h2>News Hub</h2>
-                        <p>highquality service for men &amp; women</p> -->
-                        <!-- <button>learn more</button> -->
-                      </div>
-                  </div>
-              </div>
-              <!-- Controls -->
-              
-              
-          </div>
-      </div>
-    </div>
-  </section><!-- end of slider section -->
-  
   <section>
     <div class="container action_area">
       <div class='row' >
@@ -48,6 +25,9 @@
                   FOX News
                 </h1>
                 <div class='webFeedActions pull-right'>
+                  <a href="JavaScript:void(0);" class='view_provider_link'>
+                    <i class="fas fa-eye"></i>
+                  </a>
                   <a href="JavaScript:void(0);" class='export_provider_xml' target="_blank">
                     <i class="fas fa-arrow-circle-up"></i>
                   </a>
@@ -264,7 +244,6 @@
     </div>
   </section><!-- end of contact section -->
 
-
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -430,5 +409,8 @@
     </div>
   </div>
 </div>
-
 <?php include('footer.php') ?>  
+<script type="text/javascript">
+  get_providers();
+  getConfiguration();
+</script>

@@ -152,30 +152,63 @@
   }
 
   function import_webfeed($conn, $url, $provider_id) {
+    $success_count = 0;
+    $fail_count = 0;
+    $last_attempt_response = '';
     $age = (int)get_feed_age_limit($conn);
     if(can_import_provider_feeds($conn)) { 
       $i=0;
-      $feeds = simplexml_load_file($url);
-      update_provider_data($conn, $provider_id, $feeds);
-      if(!empty($feeds)){
-        foreach (get_feeds_data($feeds) as $item) {
-          $date2 = new DateTime(date('Y-m-d', strtotime(get_feed_publish_date($item))));
-          $date1 = new DateTime(date('Y-m-d'));
-          $diff = $date1->diff($date2)->days;
-          $is_already_saved = is_already_imported($conn, $item);
-          
-          if($age > $diff) {
-            if(!$is_already_saved) {
-              $q = create_query_for_feed( $provider_id, $item);
-              mysqli_query($conn, $q);
+      $feeds = simplexml_load_file($url, 'SimpleXMLElement', LIBXML_NOWARNING);
+      if($feeds === false) {
+        $last_attempt_response = 'Could not import file content.';
+      }
+      else {
+        if(!empty($feeds)){
+          foreach (get_feeds_data($feeds) as $item) {
+            $date2 = new DateTime(date('Y-m-d', strtotime(get_feed_publish_date($item))));
+            $current_date = new DateTime(date('Y-m-d'));
+            $diff = $current_date->diff($date2)->days;
+            $is_already_saved = is_already_imported($conn, $item);
+            if( empty($latest_record) || $latest_record < $date2)
+              $latest_record = $date2;
+
+            if($age > $diff) {
+              if(!$is_already_saved) {
+                $q = create_query_for_feed( $provider_id, $item);
+                if(mysqli_query($conn, $q)) {
+                  $success_count += 1;
+                }
+                else {
+                  $last_attempt_response = $conn->error;
+                  $fail_count += 1;
+                }
+              }
             }
-          }
-          elseif ($is_already_saved) {
-            $sql = "UPDATE webfeeds SET webfeeds.is_deleted= true WHERE webfeeds.url='".get_feed_url($item)."'";
-            mysqli_query($conn, $sql);
+            elseif ($is_already_saved) {
+              $sql = "UPDATE webfeeds SET webfeeds.is_deleted= true WHERE webfeeds.url='".get_feed_url($item)."'";
+              mysqli_query($conn, $sql);
+            }
           }
         }
       }
+      // $response_message['fail_count'] = $fail_count;
+      if($fail_count == 0) {
+        $last_attempt_response = $success_count;
+        $lastest_successful_update = date("Y-m-d H:i:s");
+      }
+      else {
+        $last_attempt_response = 'There were some issues while saving Web feed posts';
+      }
+
+      // $response_message['d'] = $lastest_successful_update;
+      // send_response($response_message);
+  
+      // $latest_record
+      // $last_update_attempt = new DateTime('Y-m-d H:i:s');
+      // $response_message['d'] = $latest_record;
+      // $response_message['qr'] = $conn->error;
+      // send_response($response_message);
+      update_provider_data($conn, $provider_id, $lastest_successful_update, $latest_record, date("Y-m-d H:i:s"), $last_attempt_response, $feeds);
     }
   }
 
@@ -498,15 +531,23 @@
     }
   }
 
-  function update_provider_data($conn, $provider_id, $imported_data) {
-    $sql = "UPDATE providers SET providers.original_name='".addslashes(get_original_title($imported_data))."', providers.external_url='".get_provider_external_url($imported_data)."' WHERE providers.id=".$provider_id;
+  function update_provider_data($conn, $provider_id, $lastest_successful_update, $latest_record, $last_update_attempt, $last_attempt_response, $imported_data) {
+    $newDate = $latest_record->format(\DateTime::ISO8601);
+    $sql = "UPDATE providers SET providers.original_name='".addslashes(get_original_title($imported_data))."', providers.external_url='".get_provider_external_url($imported_data)."', providers.lastest_successful_update='".$lastest_successful_update."', providers.last_update_attempt='".$last_update_attempt."', providers.last_attempt_response='".$last_attempt_response."', providers.latest_record='".$newDate."' WHERE providers.id=".$provider_id;
     $res = mysqli_query($conn, $sql);
-    if( $res ) {
-      
-    }
-    else {
-      $r['error_message'] = 'No post found! ';
-    }
+  }
 
+  function get_provider($conn) {
+    if(isset($_REQUEST['provider_id']) && $_REQUEST['provider_id'] != ''){
+      $sql = "SELECT * FROM providers WHERE providers.id=".$_REQUEST['provider_id'];
+      $result = mysqli_query($conn, $sql);
+      if( mysqli_num_rows($result) > 0) {
+        $r['provider'] = mysqli_fetch_assoc($result);
+      }
+      else {
+        $r['error_message'] = 'No provider found!';
+      }
+      send_response($r);
+    }
   }
 ?>

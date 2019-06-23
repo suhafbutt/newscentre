@@ -1,4 +1,3 @@
-
   <!-- footer starts here -->
   <footer class="footer clearfix">
     <div class="container">

@@ -1,27 +1,4 @@
 <?php include('header.php') ?>
-  <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id='649'>
-    <div class="container-fluid">
-      <div class="row">
-          <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
-          
-              <div class="carousel-inner" role="listbox" style="background-image: url(img/pattern.jpg);">
-                  <div class="item active" id="img_item">
-                    <img src="img/output-onlinepngtools.png" alt="News" class="img_news">
-                      <div class="carousel-caption">
-                        <!-- <h2>News Hub</h2>
-                        <p>highquality service for men &amp; women</p> -->
-                        <!-- <button>learn more</button> -->
-                      </div>
-                  </div>
-              </div>
-              <!-- Controls -->
-              
-              
-          </div>
-      </div>
-    </div>
-  </section><!-- end of slider section -->
-  
   <section class="about text-center newsHubProviderArea" id="about">
     <div class="container" id='providerDetailView'>
       <div class='header_section'>
@@ -48,17 +25,75 @@
           </div>
         </div>
         <div class='row'>
-          <div class='col-md-12 col-sm-12'>
-            <h1 class='detail_section'>
-              Published Date
-            </h1>
+          <div class='col-md-6 col-sm-6 section1'>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section'>
+                Provider:
+              </h3>
+            </div>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section provider_source_name'>
+                CNN Top Site 
+              </h3>
+            </div>
+
+            
+
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section'>
+                Last Update Attempt:
+              </h3>
+            </div>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section last_update_attempt'>
+                Sunday Jun 23, 2019 15:24  
+              </h3>
+            </div>
+
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section'>
+                Records Found on last Attempt:
+              </h3>
+            </div>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section last_update_attempt_response'>
+                Sunday Jun 23, 2019 15:24  
+              </h3>
+            </div>
+
+          </div>
+          <div class='col-md-6 col-sm-6 section2'>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section'>
+                Last Successfull Update:
+              </h3>
+            </div>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section last_successfull_update'>
+                Sunday Jun 23, 2019 15:24 
+              </h3>
+            </div>
+
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section'>
+                Latest Record Date:
+              </h3>
+            </div>
+            <div class='col-md-6 col-sm-6'>
+              <h3 class='detail_section latest_record_date'>
+                Sunday Jun 23, 2019 15:24  
+              </h3>
+            </div>
+
           </div>
         </div>
       </div>
 
       <div class='row'>
         <div class='col-md-12 col-sm-12'>
-          <table class="table table-striped">
+          <h1> Feeds </h1>
+
+          <table class="table table-striped" id='provider_view_feed_table'>
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -70,24 +105,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -430,3 +447,7 @@
 </div>
 
 <?php include('footer.php') ?>  
+
+<script type="text/javascript">
+  get_provider_view_data();
+</script>
