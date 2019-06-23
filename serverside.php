@@ -1,163 +1,432 @@
-<?php 
-// include('database.php');
+<?php include('header.php') ?>
+  <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id='649'>
+    <div class="container-fluid">
+      <div class="row">
+          <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
+          
+              <div class="carousel-inner" role="listbox" style="background-image: url(img/pattern.jpg);">
+                  <div class="item active" id="img_item">
+                    <img src="img/output-onlinepngtools.png" alt="News" class="img_news">
+                      <div class="carousel-caption">
+                        <!-- <h2>News Hub</h2>
+                        <p>highquality service for men &amp; women</p> -->
+                        <!-- <button>learn more</button> -->
+                      </div>
+                  </div>
+              </div>
+              <!-- Controls -->
+              
+              
+          </div>
+      </div>
+    </div>
+  </section><!-- end of slider section -->
+  
+  <section class="about text-center newsHubProviderArea" id="about">
+    <div class="container" id='providerDetailView'>
+      <div class='header_section'>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12'>
+            <h1 class='heading turncate_to'> CNN </h1>
+            <div class='webFeedActions pull-right'>
+              <a href="JavaScript:void(0);" class='export_provider_xml' target="_blank">
+                <i class="fas fa-arrow-circle-up"></i>
+              </a>
+              <a href="JavaScript:void(0);" class='external_provider_link' target="_blank">
+                <i class="fas fa-external-link-square-alt"></i>
+              </a>
+              <a href="JavaScript:void(0);" class='sync_provider_data'>
+                <i class="fas fa-sync"></i>
+              </a>
+              <a href="JavaScript:void(0);" class='edit_provider_data'>
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="JavaScript:void(0);" class='delete_provider_data'>
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12'>
+            <h1 class='detail_section'>
+              Published Date
+            </h1>
+          </div>
+        </div>
+      </div>
 
-// // echo $_SERVER["REQUEST_METHOD"];
-
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//   // echo "sdasdasdas";
-//   // echo isset($_POST['submitButton']);
-//   // echo $_POST['submitButton'];
-//   // import_webfeed('https://www.cnbc.com/id/100003114/device/rss/rss.html');
-//   // import_webfeed('http://rss.cnn.com/rss/edition.rss', $conn);
-
-//   if(isset($_POST['submitButton']) && $_POST['submitButton'] == 'newWebFeedForm'){
-//     $is_valid = validate_provider($conn); 
-//     if($is_valid[0]) {
-//       if (( $provider =  mysqli_query($conn, create_query_for_provider()))) {
-//         echo "New record created successfully";
-//         import_webfeed($conn, $_POST["url"], $conn->insert_id);
-//       } 
-//       else {
-//         echo "Error: " . $sql . "<br>" . $conn->error;
-//       }  
-//     }
-//     else {
-//       echo 'Array Length: '.count($is_valid[1]);
-//       echo join(', ', $is_valid[1]);
-//     }
-
-//   //   // header('Location: ' . $_SERVER['HTTP_REFERER']);
-//   }
-// }
-
-
-// function validate_provider($conn) {
-//   $errors = array();
-//   $valid_url_regex = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
-//   $is_valid = true;
-//   if(is_duplicate_provider($conn)) {
-//     $is_valid = false;
-//     array_push($errors, 'Provider already exist.');
-//   }
-
-//   if(!is_valid_webfeed_url($_POST["url"])) {
-//     $is_valid = false;
-//     array_push($errors, 'Invalid feed URL');
-//   }
-
-//   if(!isset($_POST["name"])) {
-//     $is_valid = false;
-//     array_push($errors, 'Name is required.');
-//   }
-
-//   if(!preg_match($valid_url_regex, $_POST["url"])){
-//     $is_valid = false;
-//     array_push($errors, 'Url is not valid.');
-//   }
-//   return array($is_valid, $errors);
-// }
-
-// function is_duplicate_provider($conn) {
-//   $sql = "SELECT * FROM providers WHERE providers.url = '".$_POST["url"]."'";
-//   $res = mysqli_query($conn, $sql);
-//   $is_duplicate = true;
-
-//   if(mysqli_num_rows($res) == 0){
-//     $is_duplicate = false;
-//   }
-//   return $is_duplicate;
-// }
-
-// function is_valid_webfeed_url($url) {
-//   $is_valid_url = false;
-//   if(@simplexml_load_file($url)){
-//     $is_valid_url = true;
-//   }
-//   return $is_valid_url;
-// }
-
-// function create_query_for_provider(){
-//   return "INSERT INTO providers(name, url, created_at, original_name) VALUES ('".$_POST["name"]."','".$_POST["url"]."','".date("Y-m-d H:i:s")."', '".$_POST["name"]."')";
-// }
-
-// function create_query_for_feed($provider_id, $item) {
-//   $pubDate = date('Y-m-d H:i:s', strtotime($item->pubDate));
-
-//   return "INSERT INTO webfeeds(title, description, url, publish_date, provider_id) 
-//           VALUES ('".addslashes($item->title)."','".addslashes($item->description)."','".$item->link."','".$pubDate."', '".$provider_id."')";
-// }
-
-// function import_webfeed($conn, $url, $provider_id) {
-//   $i=0;
-//   $feeds = simplexml_load_file($url);
-//   if(!empty($feeds)){
-//     $success = 0;
-//     $fail = 0;
-
-//     foreach ($feeds->channel->item as $item) {
-//       $q = create_query_for_feed( $provider_id, $item);
-      
-//       if (mysqli_query($conn, $q)) {
-//         echo "New record created successfully";
-//         $success++;
-//       } 
-//       else {
-//         echo "Error: " . $sql . "<br>" . $conn->error;
-//         $fail++;
-//       }  
-//     }
-//   }
-//   else {
-//     echo "<h2>No item found</h2>";
-//   }
-
-//   // echo "----------------------------------------------------------- ";
-//   // echo 'Success: '.$success;
-//   // echo 'Fail: '.$fail;
-// }
-
-function get_feeds_data($feeds) {
-  if(isset($feeds->channel->item)) {
-    return $feeds->channel->item;
-  }
-  else {
-    return $feeds->entry;
-  }
-}
+      <div class='row'>
+        <div class='col-md-12 col-sm-12'>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Published On Feed</th>
+                <th scope="col">Detected by App</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section><!-- end of about section -->
 
 
-$url = 'http://blog.case.edu/news/feed.atom';
-$i=0;
-$feeds = simplexml_load_file($url);
-if(!empty($feeds)){
+  <!-- service section starts here -->
+  <section class="service text-center" id="service">
+    <div class="container">
+      <div class="row">
+        <h2>our services</h2>
+        <h4>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h4>
+        <div class="col-md-3 col-sm-6">
+          <div class="single-service">
+            <div class="single-service-img">
+              <div class="service-img">
+                <img class="heart img-responsive" src="img/logo.png" alt="">
+              </div>
+            </div>
+            <h3>Heart problem</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="single-service">
+            <div class="single-service-img">
+              <div class="service-img">
+                <img class="brain img-responsive" src="img/service2.png" alt="">
+              </div>
+            </div>
+            <h3>brain problem</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="single-service">
+            <div class="single-service-img">
+              <div class="service-img">
+                <img class="knee img-responsive" src="img/service3.png" alt="">
+              </div>
+            </div>
+            <h3>knee problem</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="single-service">
+            <div class="single-service-img">
+              <div class="service-img">
+                <img class="bone img-responsive" src="img/service4.png" alt="">
+              </div>
+            </div>
+            <h3>human bones problem</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- end of service section -->
 
-  // var_dump($feeds->entry);
-  foreach (get_feeds_data($feeds) as $item) {
-    echo $item->title;
-    echo '<br/>';
-    // echo $item->content;
-    echo '<br/>';
-    echo $item->link['href'];
-    echo '<br/>';
-    echo $item->published;
-    echo '<br/>';
-    echo $item->id;
-    echo '<br/>';
-    // $date2 = new DateTime(date('Y-m-d', strtotime($item->pubDate)));
-    // $date1 = new DateTime(date('Y-m-d'));
-    // $diff = $date1->diff($date2)->days;
-    // $is_already_saved = is_already_imported($conn, $item);
-    // if($age > $diff) {
-    //   if(!$is_already_saved) {
-    //     $q = create_query_for_feed( $provider_id, $item);
-    //     mysqli_query($conn, $q);
-    //   }
-    // }
-    // elseif ($is_already_saved) {
-    //   $sql = "UPDATE webfeeds SET webfeeds.is_deleted= true WHERE webfeeds.url='".$item->link."'";
-    //   mysqli_query($conn, $sql);
-    // }
-  }
-}
 
-?>
+  <!-- team section -->
+  <section class="team" id="team">
+    <div class="container">
+      <div class="row">
+        <div class="team-heading text-center">
+          <h2>our team</h2>
+          <h4>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled</h4>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person">
+            <img class="img-responsive" src="img/member1.jpg" alt="member-1">
+          </div>
+          <div class="person-detail">
+            <div class="arrow-bottom"></div>
+            <h3>Dr. M. Weiner, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person-detail">
+            <div class="arrow-top"></div>
+            <h3>Dr. Danielle, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+          <div class="person">
+            <img class="img-responsive" src="img/member2.jpg" alt="member-2">
+          </div>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person">
+            <img class="img-responsive" src="img/member3.jpg" alt="member-3">
+          </div>
+          <div class="person-detail">
+            <div class="arrow-bottom"></div>
+            <h3>Dr. Caitlin, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person-detail">
+            <div class="arrow-top"></div>
+            <h3>Dr. Joseph, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+          <div class="person">
+            <img class="img-responsive" src="img/member4.jpg" alt="member-4">
+          </div>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person">
+            <img class="img-responsive" src="img/member5.jpg" alt="member-5">
+          </div>
+          <div class="person-detail">
+            <div class="arrow-bottom"></div>
+            <h3>Dr. Michael, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+        </div>
+        <div class="col-md-2 single-member col-sm-4">
+          <div class="person-detail">
+            <div class="arrow-top"></div>
+            <h3>Dr. Hasina, M.D.</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+          </div>
+          <div class="person">
+            <img class="img-responsive" src="img/member6.jpg" alt="member-5">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- end of team section -->
+
+  <!-- map section -->
+  <div class="api-map" id="contact">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 map" id="map"></div>
+      </div>
+    </div>
+  </div><!-- end of map section -->
+
+  <!-- contact section starts here -->
+  <section class="contact">
+    <div class="container">
+      <div class="row">
+        <div class="contact-caption clearfix">
+          <div class="contact-heading text-center">
+            <h2>contact us</h2>
+          </div>
+          <div class="col-md-5 contact-info text-left">
+            <h3>contact information</h3>
+            <div class="info-detail">
+              <ul><li><i class="fa fa-calendar"></i><span>Monday - Friday:</span> 9:30 AM to 6:30 PM</li></ul>
+              <ul><li><i class="fa fa-map-marker"></i><span>Address:</span> 123 Some Street , London, UK, CP 123</li></ul>
+              <ul><li><i class="fa fa-phone"></i><span>Phone:</span> (032) 987-1235</li></ul>
+              <ul><li><i class="fa fa-fax"></i><span>Fax:</span> (123) 984-1234</li></ul>
+              <ul><li><i class="fa fa-envelope"></i><span>Email:</span> info@doctor.com</li></ul>
+            </div>
+          </div>
+          <div class="col-md-6 col-md-offset-1 contact-form">
+            <h3>leave us a message</h3>
+
+            <form class="form">
+              <input class="name" type="text" placeholder="Name">
+              <input class="email" type="email" placeholder="Email">
+              <input class="phone" type="text" placeholder="Phone No:">
+              <textarea class="message" name="message" id="message" cols="30" rows="10" placeholder="Message"></textarea>
+              <input class="submit-btn" type="submit" value="SUBMIT">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- end of contact section -->
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id='newWebFeedForm'>
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLongTitle">
+            New Web Feed
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" name='name' id="name">
+          </div>
+          <div class="form-group">
+            <label for="feedUrl">Url</label>
+            <input type="url" name='url' class="form-control" id="feedUrl">
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="newFeed">
+            <input type="text" name='submitButton' class="form-control hidden" id="submitButton" value="newWebFeedForm">
+            <input type="text" name='id' class="form-control hidden" id="provider_id" value="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="small-btn primary" id='new_web_feed_submit'>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="configurationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id='configurationForm'>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            Change Configurations
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="time_interval">Time Interval to update Web Feed (minutes)</label>
+            <input type="number" class="form-control" name='time_interval' id="time_interval" min=0>
+          </div>
+          <div class="form-group">
+            <label for="keep_until">Old Record Age (days)</label>
+            <input type="number" name='keep_until' class="form-control" id="keep_until" min=0>
+            <small id="keep_until_help" class="form-text text-muted">Web Feeds records will not be saved if post is older than the threshold.</small>
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="updateConfiguration">
+            <input type="text" name='submitButton' class="form-control hidden" id="submitButton" value="updateConfiguration">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="small-btn primary" id='configurationFormSubmit'>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="providerFeed" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id='providerFeedForm'>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            Edit Web Feed Post
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="post_name">Name</label>
+            <input type="text" class="form-control" name='title' id="post_name">
+          </div>
+          <div class="form-group">
+            <label for="post_description">Description</label>
+            <textarea class="form-control" name='description' id="post_description" rows="3"></textarea>
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="updateFeedPost">
+            <input type="text" name='provider_post_id' class="form-control hidden" id="provider_post_id" value="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="small-btn primary" id='providerFeedPostFormSubmit'>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewProviderPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle4" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          View
+        </h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <label>Title:</label>
+            <p class='name'>
+              qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+            </p>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <label>Description:</label>
+            <p class='description'>
+              qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+            </p>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <div class='pull-left'>
+              <label>Published Date:</label>
+              <p class='published_date'>
+                qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+              </p>
+            </div>
+            <div class='pull-right'>
+              <label>Detected by app:</label>
+              <p class='created_at'>
+                qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <a href="JavaScript:void(0);" class='external_provider_view_feed_link' target="_blank">
+              External Link
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php include('footer.php') ?>  

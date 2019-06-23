@@ -70,7 +70,12 @@
                   <p class='turncate_to title'>
                     mom left paralyzed after pregnancy complication triggers stroke at 29 weeks
                   </p>
+                  <p class='hidden published_date'></p>
+                  <p class='hidden created_at'></p>
                   <div class='newsActions pull-right'>
+                    <a href="JavaScript:void(0);" class='view_provider_feed_link'>
+                      <i class="fas fa-eye"></i>
+                    </a>
                     <a href="JavaScript:void(0);" class='external_provider_feed_link' target="_blank">
                       <i class="fas fa-external-link-square-alt"></i>
                     </a>
@@ -360,6 +365,68 @@
           <button type="button" class="small-btn primary" id='providerFeedPostFormSubmit'>Save</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewProviderPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle4" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          View
+        </h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <label>Title:</label>
+            <p class='name'>
+              qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+            </p>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <label>Description:</label>
+            <p class='description'>
+              qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+            </p>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <div class='pull-left'>
+              <label>Published Date:</label>
+              <p class='published_date'>
+                qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+              </p>
+            </div>
+            <div class='pull-right'>
+              <label>Detected by app:</label>
+              <p class='created_at'>
+                qwertytdsxcvgrewsdcv gvgy c yc gyc gv gjv 
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <div class='row'>
+          <div class='col-md-12 col-sm-12' >
+            <a href="JavaScript:void(0);" class='external_provider_view_feed_link' target="_blank">
+              External Link
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>

@@ -24,6 +24,7 @@
   <script src="js/jquery.preloader.min.js"></script>
   <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="js/jquery.dialog.min.js"></script>
+  <script src="js/jquery-dateformat.min.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

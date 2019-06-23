@@ -15,7 +15,6 @@
   }
   else
   {
-
     $response_message['error_message'] = 'Api key required!';
     send_response($response_message);
     // response('401','Unauthorized Access..1!!',401);
@@ -157,6 +156,7 @@
     if(can_import_provider_feeds($conn)) { 
       $i=0;
       $feeds = simplexml_load_file($url);
+      update_provider_data($conn, $provider_id, $feeds);
       if(!empty($feeds)){
         foreach (get_feeds_data($feeds) as $item) {
           $date2 = new DateTime(date('Y-m-d', strtotime(get_feed_publish_date($item))));
@@ -164,9 +164,6 @@
           $diff = $date1->diff($date2)->days;
           $is_already_saved = is_already_imported($conn, $item);
           
-            // $r['age'] = $age;
-            // $r['diff'] = $diff;
-            // send_response($r); 
           if($age > $diff) {
             if(!$is_already_saved) {
               $q = create_query_for_feed( $provider_id, $item);
@@ -224,6 +221,24 @@
     }
     else {
       return $item->guid;
+    }
+  }
+
+  function get_provider_external_url($item) {
+    if(isset($item->link['href'])) {
+      return $item->link['href'];
+    }
+    else {
+      return $item->channel->link;
+    }
+  }
+
+  function get_original_title($item) {
+    if(isset($item->title)) {
+      return $item->title;
+    }
+    else {
+      return $item->channel->image->title;
     }
   }
 
@@ -481,5 +496,17 @@
     else {
       return $str;
     }
+  }
+
+  function update_provider_data($conn, $provider_id, $imported_data) {
+    $sql = "UPDATE providers SET providers.original_name='".addslashes(get_original_title($imported_data))."', providers.external_url='".get_provider_external_url($imported_data)."' WHERE providers.id=".$provider_id;
+    $res = mysqli_query($conn, $sql);
+    if( $res ) {
+      
+    }
+    else {
+      $r['error_message'] = 'No post found! ';
+    }
+
   }
 ?>

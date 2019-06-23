@@ -1000,7 +1000,7 @@ button.close:before, button.close:after {
   cursor: pointer;
 }
 .about-details ul li p.turncate_to{
-  width: 90%;
+  width: 86%;
 }
 .about-details h1.turncate_to {
   width: 67%;
@@ -1036,6 +1036,38 @@ button.close:before, button.close:after {
 small {
   font-size: 95%;
 }
+#viewProviderPost hr{
+  margin: 10px 0;
+}
+#viewProviderPost .modal-dialog {
+  width: 50%;
+}
+#providerDetailView,
+.table>thead>tr>th, 
+.table>tbody>tr>th, 
+.table>tfoot>tr>th, 
+.table>thead>tr>td, 
+.table>tbody>tr>td, 
+.table>tfoot>tr>td {
+  text-align: left;
+}
+
+#providerDetailView .header_section {
+  background-color: grey;
+  padding: 10px;
+}
+
+#providerDetailView .header_section svg{
+  font-size: 30px;
+}
+
+#providerDetailView .header_section a{
+  margin-right: 10px;
+}
+#providerDetailView .header_section .heading{
+  width: 76%;
+}
+
 /*Custom Button CSS*/
 html,body{
   height:100%;

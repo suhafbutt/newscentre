@@ -6,6 +6,13 @@ function notify(message_type, message) {
   });
 }
 
+function date_format(date) {
+  if(date)
+    return $.format.date(date, 'ddd MMM dd, yyyy HH:mm');
+  else
+    return '';
+}
+
 function delete_provider(data) {
   console.log(data);
   data = JSON.parse(data.responseText);
@@ -53,7 +60,7 @@ function render_providers(data){
   simplified_data = JSON.parse(data.responseText).data;
   if(simplified_data.length > 0) {
     $.each(simplified_data, function (index, provider) {
-      new_provider_div(provider.id, provider.name, provider.url);
+      new_provider_div(provider.id, provider.name, provider.external_url);
     });
   }
   else {
@@ -139,6 +146,8 @@ function render_provider_post(newDiv, provider_feed) {
   $(newDiv).find('.title').html(provider_feed.title);
   $(newDiv).find('.title').data('full_title', provider_feed.title);
   $(newDiv).find('.title').data('description', provider_feed.description);
+  $(newDiv).find('.published_date').html(provider_feed.publish_date);
+  $(newDiv).find('.created_at').html(provider_feed.created_at);
   $(newDiv).data('record_id', provider_feed.id);
   if(provider_feed.url)
     $(newDiv).find('.newsActions .external_provider_feed_link').attr('href', provider_feed.url);  
@@ -218,9 +227,18 @@ function delete_provider_post(data) {
   if(data.error_message)
     notify( 'error', data.error_message);
 }
+
+function get_provider_view_data() {
+  request_to_server('get', 'api.php', {'method': 'get_provider_feeds', 'api_key': $('#home').data('api_key'), 'provider_id': $('#home').data('record_id')}, 'render_provider_view');
+}
+function render_provider_view(data) {
+  
+}
+
 jQuery(document).ready(function () {
   get_providers();
   getConfiguration();
+  // get_provider_view_data();
   $('body').on('click', '#new_web_feed_submit', function(){
     console.log('Submit clicked');
 
@@ -296,5 +314,16 @@ jQuery(document).ready(function () {
           request_to_server('POST', 'api.php', {'method': 'delete_provider_post', 'api_key': $('#home').data('api_key'), 'id': record_id}, 'delete_provider_post');
       }
     });
+  });
+
+  $('body').on('click', '.view_provider_feed_link', function(){
+    parent_div = $(this).closest('.providerWebFeedPostArea');
+    $('#viewProviderPost .name').html($(parent_div).find('.title').data('full_title'));
+    // $('#viewProviderPost .description').val($(parent_div).data('record_id'));
+    $('#viewProviderPost .description').html($(parent_div).find('.title').data('description'));
+    $('#viewProviderPost .published_date').html(date_format($(parent_div).find('.published_date').text()));
+    $('#viewProviderPost .created_at').html(date_format($(parent_div).find('.created_at').text()));
+    $('#viewProviderPost .external_provider_view_feed_link').attr('href', $(parent_div).find('.external_provider_feed_link').attr('href'));
+    $('#viewProviderPost').modal('show');
   });
 });
