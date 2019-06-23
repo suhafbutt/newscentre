@@ -1,3 +1,4 @@
+is_sync_clicked = false;
 function notify(message_type, message) {
   Lobibox.notify(message_type, {
     position: 'right top',
@@ -71,15 +72,15 @@ function new_provider_div(provider_id, provider_name, provider_url) {
   else {
     newDiv = $('.newsHubProviderArea #hiddenArea').clone().appendTo( '.newsHubProviderArea #prividersList' );
     $(newDiv).find('.providerWebFeedArea li').html('');
+    $(newDiv).addClass('provider_'+provider_id);
   }
 
-  $(newDiv).addClass('provider_'+provider_id);
   $(newDiv).data('record_id', provider_id);
   $(newDiv).removeAttr('id');  
   $(newDiv).find('.provider_name').html(provider_name);
   $(newDiv).find('.provider_name').data('full_name', provider_name);
   $(newDiv).find('.webFeedActions .external_provider_link').attr('href', provider_url);  
-  // $(newDiv).find('.webFeedActions .sync_provider_data').attr('href', "api.php?id="+provider_id+"&method=sync_provider");  
+  $(newDiv).find('.webFeedActions .export_provider_xml').attr('href', 'api.php?api_key='+$('#home').data('api_key')+'&provider_id='+provider_id+'&method=exportProvider');  
   $(newDiv).find('ul').preloader();
   $(newDiv).removeClass('hidden');
 }
@@ -101,31 +102,49 @@ function render_provider_feeds(data) {
     $('.prividersListArea ul').preloader('remove');
   }
   else{
-    last_updated_provider_id = 0;
-    simplified_data = JSON.parse(data.responseText).data;
+    simplified_data= JSON.parse(data.responseText).data;
+    to_be_updated_provider_id = 0;
+    if(simplified_data.length > 0){
+      console.log(simplified_data);
+      to_be_updated_provider_id = simplified_data[0].provider_id
+      $('.provider_'+to_be_updated_provider_id).find('.providerWebFeedArea li').remove();
+      console.log(simplified_data[0].provider_id);
+    }
+    else {
+      console.log('qwertyuioiuytr');
+      console.log('.provider_'+adata.provider_id);
+      $('.provider_'+adata.provider_id).find('.providerWebFeedArea li').remove();
+    }
     $.each(simplified_data, function (index, provider_feed) {
-      last_updated_provider_id = provider_feed.provider_id;
       newDiv = $('.newsHubProviderArea #hiddenArea .providerWebFeedArea li').clone().appendTo( '.provider_'+provider_feed.provider_id+' .providerWebFeedArea' );
-      $(newDiv).find('.title').html(provider_feed.title);
-      $(newDiv).find('.newsActions .external_provider_feed_link').attr('href', provider_feed.url);  
-      $(newDiv).find('.newsActions .edit_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=edit_provider_feed");  
-      $(newDiv).find('.newsActions .delete_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=delete_provider_feed");  
+      $(newDiv).addClass('provider_post_'+provider_feed.id);
+      render_provider_post(newDiv, provider_feed);
     });
-    console.log('Id is : '+last_updated_provider_id);
-    if(last_updated_provider_id == 0)
-      $('.prividersListArea ul').preloader('remove');
+    if(to_be_updated_provider_id != 0) {
+      $('.provider_'+to_be_updated_provider_id+' ul').preloader('remove');
+      $('.provider_'+to_be_updated_provider_id+' ul').mCustomScrollbar("destroy");
+      $('.provider_'+to_be_updated_provider_id+' ul').mCustomScrollbar();
+    }
     else
-      $('.provider_'+last_updated_provider_id+' ul').preloader('remove');
-      $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar("destroy");
-      $('.provider_'+last_updated_provider_id+' ul').mCustomScrollbar();
+      $('.prividersListArea ul').preloader('remove');
+
+    if(adata.success_message && is_sync_clicked) {
+      notify( 'success', adata.success_message);
+      is_sync_clicked = false;
+    }
   }
 }
 
-// function update_provider(data) {
-//   console.log(data);
-//   simplified_data = JSON.parse(data.responseText);
-//   console.log(simplified_data);
-// }
+function render_provider_post(newDiv, provider_feed) {
+  $(newDiv).find('.title').html(provider_feed.title);
+  $(newDiv).find('.title').data('full_title', provider_feed.title);
+  $(newDiv).find('.title').data('description', provider_feed.description);
+  $(newDiv).data('record_id', provider_feed.id);
+  if(provider_feed.url)
+    $(newDiv).find('.newsActions .external_provider_feed_link').attr('href', provider_feed.url);  
+  // $(newDiv).find('.newsActions .edit_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=edit_provider_feed");  
+  // $(newDiv).find('.newsActions .delete_provider_feed_data').attr('href', "api.php?id="+provider_feed.id+"&method=delete_provider_feed");  
+}
 
 function request_to_server(request_type, url, data, render_method){
   $.ajax({
@@ -134,38 +153,19 @@ function request_to_server(request_type, url, data, render_method){
     data: data,
     dataType: 'application/json',
     success: function(resultData) { 
-      // eval(render_method+"("+resultData+")");
-      // resultData = $.parseJSON(JSON.parse(resultData));
-      // console.log('Success: '+resultData); 
-      // console.log('Success: '+resultData.success_message); 
-      // console.log('Error: '+resultData.error_message);
-      
-      // if(resultData.success_message)
-      //   notify( 'success', resultData.success_message);
-      // if(resultData.error_message)
-      //   notify( 'error', resultData.error_message);
       window[render_method](errorData);
     },
     error: function(errorData) { 
-      // eval(render_method+"("+errorData+")");
       window[render_method](errorData);
-      // const func1 = new Function(render_method);
-      // func1(errorData);
-      // console.log("Error: "+ errorData);
-      // console.log(JSON.stringify(errorData)); 
-      // console.log("Error: "+ JSON.parse(errorData.responseText).error_message); 
     }
   })
 }
 
 function resetWebFeedForm() {
   $('#exampleModalCenter h3.modal-title').html('New Web Feed');
-  // $('#newWebFeedForm').find('input').val(''); 
   $('#exampleModalCenter form #name').val('');
   $('#exampleModalCenter form #feedUrl').val('');
   $('#exampleModalCenter form #provider_id').val('');
-  // $('#exampleModalCenter form #submitButton').val('newWebFeedForm');
-  // $('#exampleModalCenter form #method').val('newFeed');
 }
 
 function getConfiguration() {
@@ -191,6 +191,33 @@ function updateConfiguration(data) {
     notify( 'error', data.error_message);
 }
 
+function updateFeedPost(data) {
+  console.log(data);
+  data = JSON.parse(data.responseText);
+  console.log(data);
+  console.log(data.id);
+  console.log($('.provider_post_'+data.id)[0]);
+  if(data.success_message){
+    render_provider_post($('.provider_post_'+data.id), data);
+    notify( 'success', data.success_message);
+    $('#providerFeed').modal('hide');
+  }
+  if(data.error_message)
+    notify( 'error', data.error_message);
+}
+
+function delete_provider_post(data) {
+  console.log(data);
+  data = JSON.parse(data.responseText);
+  console.log(data);
+
+  if(data.success_message){
+    notify( 'success', data.success_message);
+    $('.provider_post_'+data.record_id).remove();
+  }
+  if(data.error_message)
+    notify( 'error', data.error_message);
+}
 jQuery(document).ready(function () {
   get_providers();
   getConfiguration();
@@ -205,19 +232,12 @@ jQuery(document).ready(function () {
   });
 
   $('body').on('click', '.edit_provider_data', function(){
-    console.log('Edit Provider');
     parent_div = $(this).closest('.prividersListArea')
-    console.log($(parent_div).find('.provider_name').data('full_name'));
     $('#exampleModalCenter form #name').val($(parent_div).find('.provider_name').data('full_name'));
     $('#exampleModalCenter form #feedUrl').val($(parent_div).find('.external_provider_link').attr('href'));
     $('#exampleModalCenter form #provider_id').val($(parent_div).data('record_id'));
     $('#exampleModalCenter h3.modal-title').html('Update Web Feed');
     $('#exampleModalCenter').modal('show');
-    // request_to_server(  'post', 
-    //                     'api.php?id='+$(parent_div).data('record_id'), 
-    //                     $('#newWebFeedForm').serialize(), 
-    //                     'update_provider'
-    //                   ); 
   });
 
   $('body').on('hidden.bs.modal', '#exampleModalCenter', function(){
@@ -241,12 +261,40 @@ jQuery(document).ready(function () {
   });
 
   $('body').on('click', '.sync_provider_data', function(){
+    is_sync_clicked = true;
     import_webfeed($(this).closest('.prividersListArea').data('record_id'));
   });
 
   $('body').on('click', '#configurationFormSubmit', function(){
     console.log('Configuration Update');
-    // import_webfeed($(this).closest('.prividersListArea').data('record_id'));
     request_to_server('POST', 'api.php', $('#configurationForm').serialize(), 'updateConfiguration');
+  });
+
+  $('body').on('click', '.edit_provider_feed_data', function(){
+    parent_div = $(this).closest('.providerWebFeedPostArea');
+    $('#providerFeed form #post_name').val($(parent_div).find('.title').data('full_title'));
+    $('#providerFeed form #provider_post_id').val($(parent_div).data('record_id'));
+    $('#providerFeed form #post_description').val($(parent_div).find('.title').data('description'));
+    $('#providerFeed').modal('show');
+  });
+
+  $('body').on('click', '#providerFeedPostFormSubmit', function(){
+    request_to_server('POST', 'api.php', $('#providerFeedForm').serialize(), 'updateFeedPost');
+  });
+
+  $('body').on('click', '.delete_provider_feed_data', function(){
+    record_id = $(this).closest('.providerWebFeedPostArea').data('record_id');
+    console.log('ANd the Id is: record_id');
+    dialog.confirm({
+      title: "Delete Web Feed Post",
+      message: "Are you sure you want to delete this post",
+      cancel: "No",
+      button: "Yes",
+      required: true,
+      callback: function(value){
+        if(value)
+          request_to_server('POST', 'api.php', {'method': 'delete_provider_post', 'api_key': $('#home').data('api_key'), 'id': record_id}, 'delete_provider_post');
+      }
+    });
   });
 });

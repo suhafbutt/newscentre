@@ -116,4 +116,48 @@
 //   // echo 'Fail: '.$fail;
 // }
 
+function get_feeds_data($feeds) {
+  if(isset($feeds->channel->item)) {
+    return $feeds->channel->item;
+  }
+  else {
+    return $feeds->entry;
+  }
+}
+
+
+$url = 'http://blog.case.edu/news/feed.atom';
+$i=0;
+$feeds = simplexml_load_file($url);
+if(!empty($feeds)){
+
+  // var_dump($feeds->entry);
+  foreach (get_feeds_data($feeds) as $item) {
+    echo $item->title;
+    echo '<br/>';
+    // echo $item->content;
+    echo '<br/>';
+    echo $item->link['href'];
+    echo '<br/>';
+    echo $item->published;
+    echo '<br/>';
+    echo $item->id;
+    echo '<br/>';
+    // $date2 = new DateTime(date('Y-m-d', strtotime($item->pubDate)));
+    // $date1 = new DateTime(date('Y-m-d'));
+    // $diff = $date1->diff($date2)->days;
+    // $is_already_saved = is_already_imported($conn, $item);
+    // if($age > $diff) {
+    //   if(!$is_already_saved) {
+    //     $q = create_query_for_feed( $provider_id, $item);
+    //     mysqli_query($conn, $q);
+    //   }
+    // }
+    // elseif ($is_already_saved) {
+    //   $sql = "UPDATE webfeeds SET webfeeds.is_deleted= true WHERE webfeeds.url='".$item->link."'";
+    //   mysqli_query($conn, $sql);
+    // }
+  }
+}
+
 ?>

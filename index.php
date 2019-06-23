@@ -48,6 +48,9 @@
                   FOX News
                 </h1>
                 <div class='webFeedActions pull-right'>
+                  <a href="JavaScript:void(0);" class='export_provider_xml' target="_blank">
+                    <i class="fas fa-arrow-circle-up"></i>
+                  </a>
                   <a href="JavaScript:void(0);" class='external_provider_link' target="_blank">
                     <i class="fas fa-external-link-square-alt"></i>
                   </a>
@@ -63,7 +66,7 @@
                 </div>
               </div>
               <ul class= 'providerWebFeedArea'>
-                <li>
+                <li class='providerWebFeedPostArea'>
                   <p class='turncate_to title'>
                     mom left paralyzed after pregnancy complication triggers stroke at 29 weeks
                   </p>
@@ -292,7 +295,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="configurationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="configurationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <form id='configurationForm'>
@@ -307,11 +310,11 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="time_interval">Time Interval to update Web Feed (minutes)</label>
-            <input type="number" class="form-control" name='time_interval' id="time_interval">
+            <input type="number" class="form-control" name='time_interval' id="time_interval" min=0>
           </div>
           <div class="form-group">
             <label for="keep_until">Old Record Age (days)</label>
-            <input type="number" name='keep_until' class="form-control" id="keep_until">
+            <input type="number" name='keep_until' class="form-control" id="keep_until" min=0>
             <small id="keep_until_help" class="form-text text-muted">Web Feeds records will not be saved if post is older than the threshold.</small>
             <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
             <input type="text" name='method' class="form-control hidden" id="method" value="updateConfiguration">
@@ -321,6 +324,40 @@
         <div class="modal-footer">
           <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
           <button type="button" class="small-btn primary" id='configurationFormSubmit'>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="providerFeed" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id='providerFeedForm'>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            Edit Web Feed Post
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="post_name">Name</label>
+            <input type="text" class="form-control" name='title' id="post_name">
+          </div>
+          <div class="form-group">
+            <label for="post_description">Description</label>
+            <textarea class="form-control" name='description' id="post_description" rows="3"></textarea>
+            <input type="text" name='api_key' class="form-control hidden" id="api_key" value="KMPydWQBnSXVZZXZK0jg">
+            <input type="text" name='method' class="form-control hidden" id="method" value="updateFeedPost">
+            <input type="text" name='provider_post_id' class="form-control hidden" id="provider_post_id" value="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="small-btn secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="small-btn primary" id='providerFeedPostFormSubmit'>Save</button>
         </div>
       </form>
     </div>
