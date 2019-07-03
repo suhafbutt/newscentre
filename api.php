@@ -17,12 +17,10 @@
   {
     $response_message['error_message'] = 'Api key required!';
     send_response($response_message);
-    // response('401','Unauthorized Access..1!!',401);
   }
 
 
   function authenticate_key($conn) {
-    // echo $_GET["api_key"];
     $sql = "SELECT * FROM authentications WHERE authentications.auth_key = '".$_REQUEST["api_key"]."'";
     $res = mysqli_query($conn, $sql);
 
@@ -35,27 +33,13 @@
   }
 
   function send_response($data) {
-    // $status_message = 'Unauthorized Access..1!!';
-    // $response['status']=401;
-    // $response['status_message']=$status_message;
-    // $response['error_message']=$message;
-    // $response = array();
-    // $response['success'] = $success;
-    // $response['general_message'] = $message;
-    // $response['errors']  = $errors;
     $json_response = json_encode($data);
-    // echo $json_response;
     exit($json_response);
   }
 
   function newFeed($conn) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $response_message = [];
-      // echo "sdasdasdas";
-      // echo isset($_POST['submitButton']);
-      // echo $_POST['submitButton'];
-      // import_webfeed('https://www.cnbc.com/id/100003114/device/rss/rss.html');
-      // import_webfeed('http://rss.cnn.com/rss/edition.rss', $conn);
       $is_valid = validate_provider($conn, $_REQUEST['id']); 
       if($is_valid[0]) {
         if (mysqli_query($conn, create_query_for_provider())) {
@@ -74,15 +58,12 @@
         } 
         else {
           $response_message['error_message'] = $conn->error;
-          // echo "Error: " . $sql . "<br>" . $conn->error;
         }  
       }
       else {
-        // echo 'Array Length: '.count($is_valid[1]);
         $response_message['error_message'] = join(', ', $is_valid[1]);
       }
 
-      // header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
     $response_message['apikey'] = $_REQUEST["api_key"];
     send_response($response_message);
@@ -156,6 +137,8 @@
     $fail_count = 0;
     $last_attempt_response = '';
     $age = (int)get_feed_age_limit($conn);
+    $error_find = [];
+
     if(can_import_provider_feeds($conn)) { 
       $i=0;
       $feeds = simplexml_load_file($url, 'SimpleXMLElement', LIBXML_NOWARNING);
@@ -164,11 +147,15 @@
       }
       else {
         if(!empty($feeds)){
+          $i = 0;
+          update_old_feeds($conn, $provider_id, $age);
           foreach (get_feeds_data($feeds) as $item) {
             $date2 = new DateTime(date('Y-m-d', strtotime(get_feed_publish_date($item))));
             $current_date = new DateTime(date('Y-m-d'));
             $diff = $current_date->diff($date2)->days;
             $is_already_saved = is_already_imported($conn, $item);
+            
+            $i += 1;
             if( empty($latest_record) || $latest_record < $date2)
               $latest_record = $date2;
 
@@ -191,7 +178,7 @@
           }
         }
       }
-      // $response_message['fail_count'] = $fail_count;
+      
       if($fail_count == 0) {
         $last_attempt_response = $success_count;
         $lastest_successful_update = date("Y-m-d H:i:s");
@@ -200,6 +187,7 @@
         $last_attempt_response = 'There were some issues while saving Web feed posts';
       }
 
+      
       // $response_message['d'] = $lastest_successful_update;
       // send_response($response_message);
   
@@ -280,7 +268,6 @@
     $result = mysqli_query($conn, $sql);
     if( mysqli_num_rows($result) > 0) {
       $r = array();
-      // $r['data'] = $data;
       while( $rows = mysqli_fetch_assoc($result) ) {
           $r[] = $rows;
       }
@@ -295,18 +282,22 @@
 
   function get_provider_feeds($conn) {
     if(isset($_REQUEST['provider_id']) && $_REQUEST['provider_id'] != ''){
-      $sql = "SELECT * FROM webfeeds WHERE webfeeds.is_deleted = false AND webfeeds.provider_id=".$_REQUEST['provider_id'];
+      $sql = "SELECT * FROM webfeeds WHERE webfeeds.is_deleted = false AND webfeeds.provider_id=".$_REQUEST['provider_id']." ORDER BY `webfeeds`.`publish_date` DESC";
+      $provider_sql = "SELECT * FROM providers WHERE providers.id =".$_REQUEST['provider_id'];
+      $pro = mysqli_query($conn, $provider_sql);
+      $provider = mysqli_fetch_assoc($pro);
+
       $result = mysqli_query($conn, $sql);
       $result_count = mysqli_num_rows($result);
       if( $result_count > 0) {
         $r = array();
-        // $r['data'] = $data;
         while( $rows = mysqli_fetch_assoc($result) ) {
             $r[] = $rows;
         }
         $r['data'] = $r;
         $r['data_count'] = $result_count;
         $r['provider_id'] = $_REQUEST['provider_id'];
+        $r['provider'] = $provider;
         if($result_count > 0) {
           $r['success_message'] = 'Web feed posts successfully updated!';
         }
@@ -315,6 +306,7 @@
         }
       }
       else {
+        $r['provider'] = $provider;
         $r['provider_id'] = $_REQUEST['provider_id'];
         $r['data'] = [];
       }
@@ -419,7 +411,7 @@
   }
 
   function is_already_imported($conn, $item) {
-    $sql = "SELECT * FROM webfeeds WHERE webfeeds.url='".get_feed_url($item)."' AND is_deleted=false";
+    $sql = "SELECT * FROM webfeeds WHERE webfeeds.url='".get_feed_url($item)."'";
     $result = mysqli_query($conn, $sql);
     if(mysqli_num_rows($result) > 0)
       return true;
@@ -468,7 +460,10 @@
 
   function exportProvider($conn) {
     $r = array();
-    $sql = "SELECT * FROM webfeeds WHERE provider_id=".$_REQUEST['provider_id'];
+    $sql = "SELECT * FROM providers WHERE id=".$_REQUEST['provider_id'];
+    $provider = mysqli_fetch_assoc(mysqli_query($conn, $sql));
+
+    $sql = "SELECT * FROM webfeeds WHERE provider_id=".$_REQUEST['provider_id']." AND is_deleted=false";
     $result = mysqli_query($conn, $sql);
     $result_count = mysqli_num_rows($result);
 
@@ -478,31 +473,30 @@
     $rss->addAttribute('version', '2.0');
     $channel = $rss->addChild('channel'); //add channel node
 
-    $atom = $rss->addChild('atom:atom:link'); //add atom node
+    $atom = $channel->addChild('atom:atom:link'); //add atom node
     $atom->addAttribute('href', 'http://localhost'); //add atom node attribute
     $atom->addAttribute('rel', 'self');
     $atom->addAttribute('type', 'application/rss+xml');
 
-    $title = $rss->addChild('title','Sanwebe'); //title of the feed
-    $description = $rss->addChild('description','description line goes here'); //feed description
-    $link = $rss->addChild('link','http://www.sanwebe.com'); //feed site
-    $language = $rss->addChild('language','en-us'); //language
+    $provider_name = htmlentities(escape_string_xml($provider['name']));
+    $assdas = $channel->addChild('title', $provider_name); //title of the feed
+    $link = $channel->addChild('link',$provider['url']); //feed site
 
-    //Create RFC822 Date format to comply with RFC822
+    $language = $channel->addChild('language','en-us'); //language
     $date_f = date("D, d M Y H:i:s T", time());
     $build_date = gmdate(DATE_RFC2822, strtotime($date_f)); 
-    $lastBuildDate = $rss->addChild('lastBuildDate',$date_f); //feed last build date
+    $lastBuildDate = $channel->addChild('lastBuildDate',$date_f); //feed last build date
 
-    $generator = $rss->addChild('generator','PHP Simple XML'); //add generator svn_fs_node_prop(fsroot, path, propname)
+    $generator = $channel->addChild('generator','PHP Simple XML'); //add generator svn_fs_node_prop(fsroot, path, propname)
 
     if( $result_count > 0) {
       while( $rows = mysqli_fetch_assoc($result) ) {
-        $item = $rss->addChild('item'); //add item node
+        $item = $channel->addChild('item'); //add item node
         $title = $item->addChild('title', escape_string_xml($rows['title'])); //add title node under item
         $link = $item->addChild('link', $rows['url']); //add link node under item
-        $description = $item->addChild('description', '<![CDATA['. htmlentities(escape_string_xml($rows['description'])) . ']]>'); //add description
+        $des_text = utf8_encode(html_entity_decode($rows['description']));
+        $description = $item->addChild('description', '<![CDATA['. htmlentities(escape_string_xml($des_text)) . ']]>');
         
-
         $date_rfc = gmdate(DATE_RFC2822, strtotime($rows['publish_date']));
         $item = $item->addChild('pubDate', $date_rfc); //add pubDate node
       }
@@ -512,7 +506,6 @@
   }
 
   function escape_string_xml($str){
-    // $str = 'India & Aust &amp; New > sadac < ';
     $regex = '/(\s\&\s)/i';
     $regex1 = '/(\s\<\s)/i';
     $regex2 = '/(\s\>\s)/i';
@@ -549,5 +542,62 @@
       }
       send_response($r);
     }
+  }
+
+  function update_old_feeds($conn, $provider_id, $age) {
+    $current_date = new DateTime(date('Y-m-d'));
+    $old_record_ids = [];
+
+    $sql = "SELECT * FROM webfeeds WHERE webfeeds.is_deleted = false AND webfeeds.provider_id=".$provider_id;
+    $result = mysqli_query($conn, $sql);
+    $result_count = mysqli_num_rows($result);
+
+    if( $result_count > 0) {
+
+      while( $rows = mysqli_fetch_assoc($result) ) {
+        
+        $date2 = new DateTime(date('Y-m-d', strtotime($rows['publish_date'])));
+        $diff = $current_date->diff($date2)->days;
+
+        if($age < $diff) {
+          $old_record_ids[] = $rows['id'];
+        }
+      }
+      
+      if(count($old_record_ids) > 0){
+        $sql = "UPDATE webfeeds SET webfeeds.is_deleted= true WHERE webfeeds.id IN (".implode(",", $old_record_ids).")";
+        mysqli_query($conn, $sql);
+      }
+    }
+  }
+
+  function disable_provider($conn) {
+    if(isset($_REQUEST['id']) && $_REQUEST['id'] != ''){
+      $is_disable = 0;
+      $msg = 'Enabled';
+      $r['req'] = $_REQUEST;
+      if($_REQUEST['disable'] == 'disable') {
+        $is_disable = 1;
+        $msg = 'Disabled';
+      }
+
+      $r['is'] = $is_disable;
+      $sql = "UPDATE providers SET providers.is_disable=".$is_disable." WHERE providers.id=".$_REQUEST['id'];
+      $result = mysqli_query($conn, $sql);
+      if( $result ) {
+        $r['record_id'] = $_REQUEST['id'];
+        $r['is_disable'] = $is_disable;
+        $r['success_message'] = 'Web Feed '.$msg.' successfully!';
+      }
+      else {
+        $r['sql'] = $sql;
+        $r['err_msg'] = $conn->error;
+        $r['error_message'] = 'Can not find the desired record!';
+      }
+    }
+    else {
+      $r['error_message'] = 'Something went wrong, try again later!';
+    }
+    send_response($r);
   }
 ?>

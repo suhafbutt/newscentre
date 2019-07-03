@@ -17,19 +17,26 @@
   <link href='http://fonts.googleapis.com/css?family=BenchNine:300,400,700' rel='stylesheet' type='text/css'>
 
 </head>
+
+<?php 
+$p_id = '';
+if(isset($_REQUEST['provider_id']) && $_REQUEST['provider_id'] != ''){
+  $p_id = $_REQUEST['provider_id'] ;
+}
+?>
+
 <body>
   <div style="background-image: url(img/back.jpg);">
-    <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id=<?php echo $_REQUEST['provider_id'] ?>>
+    <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id=<?php echo $p_id ?>>
       <div class="container-fluid">
         <div class="row">
             <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
-            
                 <div class="carousel-inner" role="listbox" style="background-image: url(img/header.jpg);">
-                    <div class="item active" id="img_item">
+                  <div class="item active" id="img_item">
+                    <a href="/newscentre/index.php" class='header-logo-link'> 
                       <img src="img/output-onlinepngtools.png" alt="News" class="img_news">
-                        <div class="carousel-caption">
-                        </div>
-                    </div>
+                    </a>  
+                  </div>
                 </div>
             </div>
         </div>

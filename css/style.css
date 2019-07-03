@@ -911,13 +911,13 @@ responsive area
 .right.carousel-control .glyphicon.glyphicon-chevron-right {
     margin-top: -10px;
 }
-.img_news
+/*.img_news
 {
   height: 80% !important;
   width: 43%;
   margin: 0 auto;
   margin-top: 20px;
-}
+}*/
 #item
 {
   background-color: black !important;
@@ -1003,7 +1003,7 @@ button.close:before, button.close:after {
   width: 86%;
 }
 .about-details h1.turncate_to {
-  width: 61%;
+  width: 53%;
 }
 .prividersListArea {
   margin-bottom: 50px;
@@ -1053,8 +1053,9 @@ small {
 }
 
 #providerDetailView .header_section {
-  background-color: grey;
+  background-color: #fff;
   padding: 10px;
+  border-radius: 5px;
 }
 
 #providerDetailView .header_section svg{
@@ -1076,6 +1077,23 @@ body {
 }
 .containerWrapper {
   background: rgba(0, 0, 0, 0.51) !important;
+}
+table#provider_view_feed_table {
+  background-color: #fff;
+  border-radius: 5px;
+}
+.header-logo-link {
+  height: 80% !important;
+  width: 43%;
+  margin: 0 auto;
+  margin-top: 20px;
+  display: block;
+}
+.provider_title_width {
+  width: 82% !important;
+}
+.provider_feed_title_width_disable {
+  width: 96% !important;
 }
 
 /*Custom Button CSS*/
