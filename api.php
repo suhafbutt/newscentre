@@ -155,6 +155,7 @@
             $diff = $current_date->diff($date2)->days;
             $is_already_saved = is_already_imported($conn, $item);
             
+            
             $i += 1;
             if( empty($latest_record) || $latest_record < $date2)
               $latest_record = $date2;
@@ -411,7 +412,7 @@
   }
 
   function is_already_imported($conn, $item) {
-    $sql = "SELECT * FROM webfeeds WHERE webfeeds.url='".get_feed_url($item)."'";
+    $sql = "SELECT * FROM webfeeds WHERE webfeeds.url='".get_feed_url($item)."' AND webfeeds.is_deleted=false";
     $result = mysqli_query($conn, $sql);
     if(mysqli_num_rows($result) > 0)
       return true;

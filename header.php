@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>DOCTOR - Responsive HTML &amp; Bootstrap Template</title>
+  <title>News Hub</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="css/notification/lobibox.min.css">
@@ -25,8 +25,8 @@ if(isset($_REQUEST['provider_id']) && $_REQUEST['provider_id'] != ''){
 }
 ?>
 
-<body>
-  <div style="background-image: url(img/back.jpg);">
+<body style="background-image: url(img/back.jpg);">
+  <div>
     <section class="slider" id="home" data-api_key="KMPydWQBnSXVZZXZK0jg" data-record_id=<?php echo $p_id ?>>
       <div class="container-fluid">
         <div class="row">

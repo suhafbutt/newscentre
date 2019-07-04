@@ -6,6 +6,18 @@ function notify(message_type, message) {
   });
 }
 
+function titleize(sentence) {
+  if(!sentence.split) return sentence;
+  var _titleizeWord = function(string) {
+          return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+      },
+      result = [];
+  sentence.split(" ").forEach(function(w) {
+      result.push(_titleizeWord(w));
+  });
+  return result.join(" ");
+}
+
 function date_format(date, format) {
   if(date)
     return $.format.date(date, format);
@@ -51,6 +63,7 @@ function render_new_provider(data) {
       }
       else {
         new_provider_div(data.record_id, data.record_name, data.record_url);
+        update_provider_actions(data.record_id, false);
         import_webfeed(data.record_id);
       }
     }
@@ -68,7 +81,6 @@ function get_providers(){
 }
 
 function render_providers(data){
-  console.log(data);
   simplified_data = JSON.parse(data.responseText).data;
   if(simplified_data.length > 0) {
     $.each(simplified_data, function (index, provider) {
@@ -397,6 +409,10 @@ function disable_provider(data) {
 }
 
 function update_provider_actions(record_id , is_disable) {
+  console.log('========================================');
+  console.log(record_id);
+  console.log(is_disable);
+
   if(is_disable == 0) {
     $('.newsHubProviderArea .provider_'+record_id).find('a').removeClass('hidden');
     $('.newsHubProviderArea .provider_'+record_id+' .provider_disable_link.enable_icon ').addClass('hidden');
@@ -535,7 +551,7 @@ jQuery(document).ready(function () {
     record_id = $(this).closest('.prividersListArea').data('record_id');
     req_message = $(this).data('disable_message');
     dialog.confirm({
-      title: "Delete Web Feed",
+      title: titleize($(this).data('disable_message'))+" Web Feed",
       message: "Are you sure you want to "+$(this).data('disable_message')+" this web feed?",
       cancel: "No",
       button: "Yes",
